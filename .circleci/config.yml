@@ -23,6 +23,10 @@ jobs:
     steps:
       - checkout
 
+       run:
+          name: Decrpyt Secrets
+          command: openssl enc -d -aes-256-ecb -md md5 -in src/main/resources/application.properties.secrets -out src/main/resources/application.properties -k $PROPERTY_SECRET_KEY
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -45,12 +49,38 @@ jobs:
           name: Copy deployment artifacts to workspace
           command: |
             cp build/libs/reactive-*.jar /tmp/reactive.jar
+            cp .circleci/setup-heroku.sh /tmp/setup-heroku.sh
 
       # store in workspace
       - persist_to_workspace:
                 root: /tmp
                 paths:
                   - reactive.jar
+                  - setup-heroku.sh
+            
+  deploy-heroku:
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+    working_directory: ~/deploy
+    environment:
+      HEROKU_APP: "reactiveservertemplate"
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: /tmp
+
+      - run:
+          name: Run setup script
+          command: bash /tmp/setup-heroku.sh
+
+      - run:
+          name: Heroku Deploy
+          command: |
+            cp /tmp/reactive.jar .
+            ls -la
+            heroku plugins:install heroku-cli-deploy
+            heroku deploy:jar reactive.jar --app $HEROKU_APP_NAME
 
 
 
@@ -59,3 +89,10 @@ workflows:
   build-deploy:
     jobs:
       - build
+      - deploy-heroku:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
