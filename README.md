@@ -48,6 +48,6 @@ To observe the reactive nature, do the following steps:
 1. Open the following link using Chrome:
 > [get all](https://reactiveservertemplate.herokuapp.com/getAll)
 
-2. Using [Postman](https://www.postman.com/downloads/), [create]((https://github.com/ImRohitSingh/reactive#create)) a new employee.
+2. Using [Postman](https://www.postman.com/downloads/), [create](https://github.com/ImRohitSingh/reactive#create) a new employee.
 
-3. Go back to Chrome where you have opened the first link. You should see the new employe ````without reloading the page```.
+3. Go back to Chrome where you have opened the first link. You should see the new employe ```without reloading the page```.
