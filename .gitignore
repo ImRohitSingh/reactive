@@ -9,3 +9,5 @@
 *.project
 *.settings
 *.classpath
+
+application.properties
