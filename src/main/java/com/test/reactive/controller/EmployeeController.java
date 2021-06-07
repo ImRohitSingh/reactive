@@ -1,5 +1,7 @@
 package com.test.reactive.controller;
 
+import java.time.Duration;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,7 +49,7 @@ public class EmployeeController {
 
 	@GetMapping(path = "/getAll", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<Employee> findAll() {
-		return employeeService.findAll();
+		return employeeService.findAll().delayElements(Duration.ofSeconds(1));
 	}
 
 }
